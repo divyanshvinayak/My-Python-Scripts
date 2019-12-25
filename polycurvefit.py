@@ -1,3 +1,11 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Dec 25 12:00:00 2019
+
+@author: divyanshvinayak
+"""
+
 import numpy as np
 n = int(input('Enter the degree of curve to be fitted: '))
 N = int(input('Enter the number of points: '))

@@ -3,7 +3,7 @@
 """
 Created on Thu Aug 29 12:29:33 2019
 
-@author: jarvis
+@author: divyanshvinayak
 """
 
 day_init = list((input().split()))

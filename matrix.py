@@ -1,3 +1,11 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Dec 25 12:00:00 2019
+
+@author: divyanshvinayak
+"""
+
 N,M = map(int, input('Order of matrix A (N x M): ').split(' x '))
 A = list(range(N))
 print('Enter elements in matrix rowwise')

@@ -1,3 +1,11 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Dec 25 12:00:00 2019
+
+@author: divyanshvinayak
+"""
+
 import numpy as np
 N = int(input('Enter number of webpages: '))
 A = []

@@ -1,3 +1,11 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Dec 25 12:00:00 2019
+
+@author: divyanshvinayak
+"""
+
 n = int(input('Enter number of points: '))
 print('Enter values of x and y in space separated form')
 x = [0 for i in range(n)]
