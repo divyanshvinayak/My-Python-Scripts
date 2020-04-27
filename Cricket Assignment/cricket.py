@@ -6,53 +6,56 @@ Created on Thu Dec 25 12:00:00 2019
 @author: divyanshvinayak
 """
 
-import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+
 
 def readData(filename):
-    playerInfo = {'Runs': [], 'Mins': [], 'Balls Faced': [], 'Fours': [], 'Sixes': [], 'Strike Rate': [], 'Batting Position': [], 'Dismissal Type': [], 'Innings': [], 'Opposition': [], 'Ground': [], 'Date': [], 'ODI No': []}
-    data = []
+    playerInfo = {'Runs': [], 'Mins': [], 'Balls Faced': [], 'Fours': [], 'Sixes': [], 'Strike Rate': [],
+                  'Batting Position': [], 'Dismissal Type': [], 'Innings': [], 'Opposition': [], 'Ground': [],
+                  'Date': [], 'ODI No': []}
     with open(filename) as f:
         header = 1
         for record in f:
             if header != 1:
-                data = record.strip().split(',')
-                if data[7] == 'not out' or data[7] == 'retired notout':
-                    data[0] = data[0].replace('*', '')
-                playerInfo['Runs'].append(data[0])
-                playerInfo['Mins'].append(data[1])
-                playerInfo['Balls Faced'].append(data[2])
-                playerInfo['Fours'].append(data[3])
-                playerInfo['Sixes'].append(data[4])
-                playerInfo['Strike Rate'].append(data[5])
-                playerInfo['Batting Position'].append(data[6])
-                playerInfo['Dismissal Type'].append(data[7])
-                playerInfo['Innings'].append(data[8])
-                playerInfo['Opposition'].append(data[9][2:])
-                playerInfo['Ground'].append(data[10])
-                playerInfo['Date'].append(data[11])
-                playerInfo['ODI No'].append(data[12])
+                dat = record.strip().split(',')
+                if dat[7] == 'not out' or dat[7] == 'retired notout':
+                    dat[0] = dat[0].replace('*', '')
+                playerInfo['Runs'].append(dat[0])
+                playerInfo['Mins'].append(dat[1])
+                playerInfo['Balls Faced'].append(dat[2])
+                playerInfo['Fours'].append(dat[3])
+                playerInfo['Sixes'].append(dat[4])
+                playerInfo['Strike Rate'].append(dat[5])
+                playerInfo['Batting Position'].append(dat[6])
+                playerInfo['Dismissal Type'].append(dat[7])
+                playerInfo['Innings'].append(dat[8])
+                playerInfo['Opposition'].append(dat[9][2:])
+                playerInfo['Ground'].append(dat[10])
+                playerInfo['Date'].append(dat[11])
+                playerInfo['ODI No'].append(dat[12])
             header = 0
     return playerInfo
 
+
 def readMatchData():
     matchInfo = {'Team 1': [], 'Team 2': [], 'Winner': [], 'Margin': [], 'Ground': [], 'Year': [], 'ODI No': []}
-    mdata = []
     with open('mData.csv') as f:
         header = 1
         for record in f:
             if header != 1:
-                mdata = record.strip().split(',')
-                matchInfo['Team 1'].append(mdata[0])
-                matchInfo['Team 2'].append(mdata[1])
-                matchInfo['Winner'].append(mdata[2])
-                matchInfo['Margin'].append(mdata[3])
-                matchInfo['Ground'].append(mdata[4])
-                matchInfo['Year'].append(mdata[6])
-                matchInfo['ODI No'].append(mdata[7])
+                mdat = record.strip().split(',')
+                matchInfo['Team 1'].append(mdat[0])
+                matchInfo['Team 2'].append(mdat[1])
+                matchInfo['Winner'].append(mdat[2])
+                matchInfo['Margin'].append(mdat[3])
+                matchInfo['Ground'].append(mdat[4])
+                matchInfo['Year'].append(mdat[6])
+                matchInfo['ODI No'].append(mdat[7])
             header = 0
     return matchInfo
+
 
 def findOpposition():
     global teams
@@ -60,6 +63,7 @@ def findOpposition():
     teams.sort()
     df = pd.DataFrame({'Teams': teams})
     return df
+
 
 def plotScore():
     scores = {}
@@ -75,6 +79,7 @@ def plotScore():
     plt.ylabel('Total Runs Scored')
     plt.show()
 
+
 def plotAvg():
     avg = {}
     for team in teams:
@@ -86,7 +91,7 @@ def plotAvg():
                     if data['Dismissal Type'][i] != 'not out' and data['Dismissal Type'][i] != 'retired notout':
                         scores[0] += 1
         if scores[0] != 0:
-            avg[team] = scores[1]/scores[0]
+            avg[team] = scores[1] / scores[0]
         if scores[0] == 0:
             avg[team] = scores[1]
     plt.bar(avg.keys(), avg.values())
@@ -94,7 +99,8 @@ def plotAvg():
     plt.xlabel('Team')
     plt.ylabel('Average')
     plt.show()
-    
+
+
 def plotMilestones():
     runs = 0
     matches = {}
@@ -102,16 +108,17 @@ def plotMilestones():
     k = 0
     for i in range(len(data['Runs'])):
         if data['Runs'][i] != 'TDNB' and data['Runs'][i] != 'DNB':
-                runs += int(data['Runs'][i])
-        if runs >= j*1000:
-            matches[str(j*1000)] = i-k
+            runs += int(data['Runs'][i])
+        if runs >= j * 1000:
+            matches[str(j * 1000)] = i - k
             k = i
-            j+=1
+            j += 1
     plt.bar(matches.keys(), matches.values())
     plt.title('Number of Matches vs Milestones')
     plt.xlabel('Milestone')
     plt.ylabel('Number of Matches')
     plt.show()
+
 
 def plotStrikeRate():
     runs = {}
@@ -126,12 +133,13 @@ def plotStrikeRate():
                 balls[data['Date'][i][-2:]] = int(data['Balls Faced'][i])
     strikerate = runs.copy()
     for i in strikerate.keys():
-        strikerate[i] /= balls[i]/100
+        strikerate[i] /= balls[i] / 100
     plt.bar(strikerate.keys(), strikerate.values())
     plt.title('Strike Rate vs Year')
     plt.xlabel('Year')
     plt.ylabel('Strike Rate')
     plt.show()
+
 
 def calcOverallStrikeRate():
     runs = 0
@@ -140,7 +148,8 @@ def calcOverallStrikeRate():
         if data['Runs'][i] != 'TDNB' and data['Runs'][i] != 'DNB':
             runs += int(data['Runs'][i])
             balls += int(data['Balls Faced'][i])
-    return '%.2f' % (runs/balls*100)
+    return '%.2f' % (runs / balls * 100)
+
 
 def calcOverallAvg():
     runs = 0
@@ -150,7 +159,8 @@ def calcOverallAvg():
             runs += int(data['Runs'][i])
             if data['Dismissal Type'][i] != 'not out' and data['Dismissal Type'][i] != 'retired notout':
                 innings += 1
-    return '%.2f' % (runs/innings)
+    return '%.2f' % (runs / innings)
+
 
 def plotDismissalType():
     dismissal = {'Not Out': 0, 'LBW': 0, 'Bowled Out': 0, 'Caught Out': 0, 'Run Out': 0, 'Stumped': 0}
@@ -173,6 +183,7 @@ def plotDismissalType():
     plt.ylabel('Number of Matches')
     plt.show()
 
+
 def plotHScores():
     scores = {}
     hscore = {}
@@ -187,13 +198,13 @@ def plotHScores():
         scores[i].sort()
         hscore[i] = scores[i][-1]
         hsscore[i] = 0
-        if len(scores[i]) >= 2: 
+        if len(scores[i]) >= 2:
             hsscore[i] = scores[i][-2]
     fig, ax = plt.subplots()
     X = np.arange(len(hscore.keys()))
     W = 0.35
-    ax.bar(X - W/2, hscore.values(), W, label = 'Highest Score')
-    ax.bar(X + W/2, hsscore.values(), W, label = 'Second Highest Score')
+    ax.bar(X - W / 2, hscore.values(), W, label='Highest Score')
+    ax.bar(X + W / 2, hsscore.values(), W, label='Second Highest Score')
     ax.set_title('Highest Scores vs Year')
     ax.set_xticks(X)
     ax.set_xticklabels(hscore.keys())
@@ -202,29 +213,32 @@ def plotHScores():
     ax.legend()
     plt.show()
 
+
 def plotOverallHScores():
     scores = []
     for i in range(len(data['Runs'])):
         if data['Runs'][i] != 'TDNB' and data['Runs'][i] != 'DNB':
             scores.append(int(data['Runs'][i]))
     scores.sort()
-    hscores = {'Highest': scores[-1], 'Second Highest': scores[-2]} 
+    hscores = {'Highest': scores[-1], 'Second Highest': scores[-2]}
     plt.bar(hscores.keys(), hscores.values())
     plt.title('Overall Highest Scores')
     plt.ylabel('Score')
     plt.show()
 
+
 def calcMaxInnFours():
     fours = []
     for i in data['Fours']:
-        if i.isnumeric() == True:
+        if i.isnumeric():
             fours.append(int(i))
     return max(fours)
+
 
 def plotFours():
     fours = {}
     for i in range(len(data['Fours'])):
-        if data['Fours'][i].isnumeric() == True:
+        if data['Fours'][i].isnumeric():
             if data['Date'][i][-2:] in fours.keys():
                 fours[data['Date'][i][-2:]] += int(data['Fours'][i])
             else:
@@ -235,24 +249,27 @@ def plotFours():
     plt.ylabel('4s')
     plt.show()
 
+
 def calcOverallFours():
     fours = 0
     for i in range(len(data['Fours'])):
-        if data['Fours'][i].isnumeric() == True:
+        if data['Fours'][i].isnumeric():
             fours += int(data['Fours'][i])
     return fours
+
 
 def calcMaxInnSixes():
     sixes = []
     for i in data['Sixes']:
-        if i.isnumeric() == True:
+        if i.isnumeric():
             sixes.append(int(i))
     return max(sixes)
+
 
 def plotSixes():
     sixes = {}
     for i in range(len(data['Sixes'])):
-        if data['Sixes'][i].isnumeric() == True:
+        if data['Sixes'][i].isnumeric():
             if data['Date'][i][-2:] in sixes.keys():
                 sixes[data['Date'][i][-2:]] += int(data['Sixes'][i])
             else:
@@ -263,18 +280,20 @@ def plotSixes():
     plt.ylabel('6s')
     plt.show()
 
+
 def calcOverallSixes():
     sixes = 0
     for i in range(len(data['Sixes'])):
-        if data['Sixes'][i].isnumeric() == True:
+        if data['Sixes'][i].isnumeric():
             sixes += int(data['Sixes'][i])
     return sixes
+
 
 def plotFifties():
     fifties = {}
     for i in range(len(data['Runs'])):
         if data['Runs'][i] != 'TDNB' and data['Runs'][i] != 'DNB':
-            if int(data['Runs'][i]) >= 50 and int(data['Runs'][i]) < 100:
+            if 50 <= int(data['Runs'][i]) < 100:
                 if data['Date'][i][-2:] in fifties.keys():
                     fifties[data['Date'][i][-2:]] += 1
                 else:
@@ -285,13 +304,15 @@ def plotFifties():
     plt.ylabel('50s')
     plt.show()
 
+
 def calcAvgMatch2Fifty():
     fifty = 0
     for i in range(len(data['Runs'])):
         if data['Runs'][i] != 'TDNB' and data['Runs'][i] != 'DNB':
-            if int(data['Runs'][i]) >= 50 and int(data['Runs'][i]) < 100:
+            if 50 <= int(data['Runs'][i]) < 100:
                 fifty += 1
-    return '%.2f' % (len(data['Runs'])/fifty)
+    return '%.2f' % (len(data['Runs']) / fifty)
+
 
 def plotHundreds():
     hundreds = {}
@@ -308,13 +329,15 @@ def plotHundreds():
     plt.ylabel('100s')
     plt.show()
 
+
 def calcAvgMatch2Hundred():
     hundred = 0
     for i in range(len(data['Runs'])):
         if data['Runs'][i] != 'TDNB' and data['Runs'][i] != 'DNB':
             if int(data['Runs'][i]) >= 100:
                 hundred += 1
-    return '%.2f' % (len(data['Runs'])/hundred)
+    return '%.2f' % (len(data['Runs']) / hundred)
+
 
 def plotRuns():
     runs = {}
@@ -330,35 +353,38 @@ def plotRuns():
     plt.ylabel('Runs')
     plt.show()
 
+
 def plotProbability():
     score = {'50+': [0, 0], '100+': [0, 0], '<10': [0, 0]}
     for i in range(len(data['Runs'])):
         if data['Runs'][i] != 'TDNB' and data['Runs'][i] != 'DNB':
-            if int(data['Runs'][i]) >= 50 and int(data['Runs'][i]) < 100:
+            if 50 <= int(data['Runs'][i]) < 100:
                 score['50+'][1] += 1
-                if mdata['Winner'][int(data['ODI No'][i][6:])-1] != data['Opposition'][i]:
+                if mdata['Winner'][int(data['ODI No'][i][6:]) - 1] != data['Opposition'][i]:
                     score['50+'][0] += 1
             elif int(data['Runs'][i]) >= 100:
                 score['100+'][1] += 1
-                if mdata['Winner'][int(data['ODI No'][i][6:])-1] != data['Opposition'][i]:
+                if mdata['Winner'][int(data['ODI No'][i][6:]) - 1] != data['Opposition'][i]:
                     score['100+'][0] += 1
             elif int(data['Runs'][i]) < 10:
                 score['<10'][1] += 1
-                if mdata['Winner'][int(data['ODI No'][i][6:])-1] != data['Opposition'][i]:
+                if mdata['Winner'][int(data['ODI No'][i][6:]) - 1] != data['Opposition'][i]:
                     score['<10'][0] += 1
-    probability = {'50+': score['50+'][0]/score['50+'][1], '100+': score['100+'][0]/score['100+'][1], '<10': score['<10'][0]/score['<10'][1]}
+    probability = {'50+': score['50+'][0] / score['50+'][1], '100+': score['100+'][0] / score['100+'][1],
+                   '<10': score['<10'][0] / score['<10'][1]}
     plt.bar(probability.keys(), probability.values())
     plt.title('Win Probability vs Score')
     plt.xlabel('Score')
     plt.ylabel('Win Probability')
     plt.show()
-    
+
+
 if __name__ == '__main__':
     global data, mdata
     playername = input('Player Name: ').strip().title()
-    data = readData(playername+'.csv')
+    data = readData(playername + '.csv')
     mdata = readMatchData()
-    print(playername+'\'s ODI Career Stats')
+    print(playername + '\'s ODI Career Stats')
     plotHScores()
     plotOverallHScores()
     plotFours()
@@ -373,11 +399,13 @@ if __name__ == '__main__':
     plotStrikeRate()
     plotProbability()
     plotDismissalType()
-    print('The maximum number of fours hit by '+playername+' in an inning among all the innings he has batted is', calcMaxInnFours())
-    print('The number of fours hit by '+playername+' in his overall career are', calcOverallFours())
-    print('The maximum number of sixes hit by '+playername+' in an inning among all the innings he has batted is', calcMaxInnSixes())
-    print('The number of sixes hit by '+playername+' in his overall career are', calcOverallSixes())
-    print(playername+' scores a fifty on an average after '+calcAvgMatch2Fifty()+' matches')
-    print(playername+' scores a century on an average after '+calcAvgMatch2Hundred()+' matches')
-    print('The overall career average of '+playername+' is', calcOverallAvg())
-    print('The overall career strike rate of '+playername+' is', calcOverallStrikeRate())
+    print('The maximum number of fours hit by ' + playername + ' in an inning among all the innings he has batted is',
+          calcMaxInnFours())
+    print('The number of fours hit by ' + playername + ' in his overall career are', calcOverallFours())
+    print('The maximum number of sixes hit by ' + playername + ' in an inning among all the innings he has batted is',
+          calcMaxInnSixes())
+    print('The number of sixes hit by ' + playername + ' in his overall career are', calcOverallSixes())
+    print(playername + ' scores a fifty on an average after ' + calcAvgMatch2Fifty() + ' matches')
+    print(playername + ' scores a century on an average after ' + calcAvgMatch2Hundred() + ' matches')
+    print('The overall career average of ' + playername + ' is', calcOverallAvg())
+    print('The overall career strike rate of ' + playername + ' is', calcOverallStrikeRate())
